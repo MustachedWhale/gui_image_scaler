@@ -21,16 +21,22 @@ Functions:
     create_images(ill_path, orig_image)
 '''
 
-# Checks that 2 command-line arguments have been passed in.
 def has_cla():
+    '''
+    Checks if 2 command-line arguments have been passed into the program.
+    Returns true or exits the program.
+    '''
     if len(sys.argv) != 2:
         print("Provide the base folder as a command line argument.")
         exit()
     else:
         return True
 
-# Checks that the second argument is a directory.
 def check_cla_is_dir():
+    '''
+    Checks if the second command-line argument is a directory.
+    Returns true or exits the program.
+    '''
     if not os.path.isdir(sys.argv[1]):
         print("Provide the base folder as a command line argument.")
         exit()
