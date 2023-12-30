@@ -22,7 +22,7 @@ print('\nIllustration directories are named correctly.')
 # Checks that each directory contains all .jpeg files.
 print('')
 for ill_dir in ill_dir_list:
-    funcs.check_dir_contains_jpegs(base_dir, ill_dir)
+    funcs.check_dir_contains_jpgs(base_dir, ill_dir)
     print(f'{ill_dir} contain files of the correct file type.')
 
 # Creates a directory per image.
