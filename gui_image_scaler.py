@@ -22,7 +22,7 @@ def check_cla_is_dir():
         return True
     
 # Checks that the script has not already been run on the folder.
-def check_repeat(base_dir, ill_dir_list):
+def check_run_repeat(base_dir, ill_dir_list):
     for ill_dir in ill_dir_list:
         current_dir = os.path.join(base_dir, ill_dir)
         for root, dirs, files in os.walk(current_dir):
@@ -71,7 +71,7 @@ def create_dirs(base_dir, ill_dir):
 
 # Generates a new directory for each image in current_dir.
 def create_dir_from_image(file, current_dir):
-    for tup in lists.dir_list:
+    for tup in lists.dir_creation_list:
         if file == tup[0]:
             new_file_path = os.path.join(current_dir, tup[1])
             os.mkdir(new_file_path)
@@ -86,7 +86,7 @@ def move_images(base_dir, ill_dir):
         else:
             for file in files:
                 src = os.path.join(ill_path, file)
-                for tup in lists.dir_list:
+                for tup in lists.dir_creation_list:
                     if file == tup[0]:
                         equiv_dir = tup[1]
                         new_file_path = os.path.join(ill_path, equiv_dir, file)
@@ -96,13 +96,13 @@ def move_images(base_dir, ill_dir):
 # Creates the new images.
 def create_images(ill_path, orig_image):
     orig_im_file_path = os.path.join(ill_path, orig_image)
-    for ar_set in lists.ar_list:
-        if orig_image == ar_set[0]:
-            for item in ar_set:
+    for aspect_ratio_list in lists.aspect_ratio_lists:
+        if orig_image == aspect_ratio_list[0]:
+            for item in aspect_ratio_list:
                 if item == orig_image:
                     continue
                 else:
-                    for size_dict in lists.size_list:
+                    for size_dict in lists.image_size_list:
                         for key, value in size_dict.items():
                             if item == key:
                                 new_im_file_path = os.path.join(ill_path, item)
@@ -116,18 +116,16 @@ def create_images(ill_path, orig_image):
             
 # == Main Code ==
 
-# If a command-line argument has been passed in and it's a directory.
+# CLA check.
 if has_cla() and check_cla_is_dir():
     base_dir = sys.argv[1]
 
 print('\n== Image Scaler ==')
 
-# Get a list of the directories inside base_dir.
 ill_dir_list = os.listdir(base_dir)
-# Checks that the directory has not already had the script run.
-check_repeat(base_dir, ill_dir_list)
+check_run_repeat(base_dir, ill_dir_list)
 print('\nDirectories discovered.')
-# Checks that each directory has names following the convention 'Illustration X'.
+
 check_ill_dirs(ill_dir_list)
 print('\nIllustration directories are named correctly.')
 
@@ -154,14 +152,17 @@ print('\nCreating images...')
 for ill_dir in ill_dir_list:
     ill_dir_path = os.path.join(base_dir, ill_dir)
     ar_dir_list = os.listdir(ill_dir_path)
+    # Creates images for a square image.
     if len(ar_dir_list) == 1:
         create_images(ill_dir_path, ar_dir_list[0])
         print(f'Images created in {ill_dir} directory.')
+    # Creates images for portrait or landscape image.
     else:
         for ar_dir in ar_dir_list:
             ar_dir_path = os.path.join(ill_dir_path, ar_dir)
             ar_file_list = os.listdir(ar_dir_path)
             create_images(ar_dir_path, ar_file_list[0])
+            print(f'Images creates for {ar_file_list[0]}.')
         print(f'Images created in {ill_dir} directory.')
 
 print('\nScaling complete.')
